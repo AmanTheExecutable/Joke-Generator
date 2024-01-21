@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [jokeSetup, setJokeSetup] = useState("");
+	const [jokePunchline, setJokePunchline] = useState("");
+
+	const fetchData = async () => {
+		const data = await fetch(
+			"https://official-joke-api.appspot.com/random_joke"
+		);
+		const response = await data.json();
+		setJokeSetup(response.setup);
+		setJokePunchline(response.punchline);
+	};
+
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	return (
+		<div className="container">
+			<p className="setup">
+				<span>Setup: </span>
+				{jokeSetup}
+			</p>
+			<p className="punchline">
+				<span>Punchline: </span>
+				{jokePunchline}
+			</p>
+			<button onClick={fetchData}>Next Joke</button>
+		</div>
+	);
 }
 
 export default App;
